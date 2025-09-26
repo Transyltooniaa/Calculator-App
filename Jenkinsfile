@@ -1,13 +1,19 @@
 pipeline {
   agent any
 
+  tools {
+    nodejs 'node'
+  }
+
   options {
     timestamps()
-    ansiColor('xterm')
+    timeout(time: 10, unit: 'MINUTES')   // prevent hangs
+    disableConcurrentBuilds()            // no overlapping builds on same branch
   }
 
   environment {
-    NODE_ENV = "test"
+    NODE_ENV = 'test'
+    CI = 'true'
   }
 
   stages {
@@ -19,14 +25,13 @@ pipeline {
 
     stage('Install') {
       steps {
-        sh 'npm ci'
-      }
-    }
-
-    stage('Lint') {
-      steps {
-        // Add ESLint if you’ve set it up; otherwise comment this out
-        sh 'npm run lint || true'
+        sh '''
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+        '''
       }
     }
 
@@ -36,7 +41,7 @@ pipeline {
       }
       post {
         always {
-          // Archive coverage folder if available
+          // Archive coverage reports if Jest generates them
           archiveArtifacts artifacts: 'coverage/**', allowEmptyArchive: true
         }
       }
@@ -45,13 +50,13 @@ pipeline {
 
   post {
     success {
-      echo "✅ Build ${env.BUILD_NUMBER} passed!"
+      echo "✅ Build ${env.BUILD_NUMBER} passed"
     }
     failure {
-      echo "❌ Build ${env.BUILD_NUMBER} failed."
+      echo "❌ Build ${env.BUILD_NUMBER} failed"
     }
     always {
-      cleanWs()
+      cleanWs()   // clean workspace after every run
     }
   }
 }
