@@ -1,11 +1,6 @@
 pipeline {
   agent any
 
-  options {
-    timestamps()
-    ansiColor('xterm')
-  }
-
   environment {
     NODE_ENV = "test"
   }
