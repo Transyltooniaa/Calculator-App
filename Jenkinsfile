@@ -50,21 +50,22 @@ pipeline {
         }
       }
     }
-  }
+  
 
-  stage('Build Image') {
-    steps {
-      script {
-        docker.build("${DOCKER_IMAGE}", ".")
+    stage('Build Image') {
+      steps {
+        script {
+          docker.build("${DOCKER_IMAGE}", ".")
+        }
       }
     }
-  }
 
-  stage('Push Image') {
-    steps {
-      script {
-        docker.withRegistry('https://index.docker.io/v1/', 'docker_creds') {
-          docker.image("${DOCKER_IMAGE}").push()
+    stage('Push Image') {
+      steps {
+        script {
+          docker.withRegistry('https://index.docker.io/v1/', 'docker_creds') {
+            docker.image("${DOCKER_IMAGE}").push()
+          }
         }
       }
     }
