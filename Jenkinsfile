@@ -2,6 +2,8 @@ pipeline {
   agent any
 
   environment {
+    NODE_ENV = 'test'
+    CI = 'true'
     DOCKER_USER = 'tranyltoonia'
     DOCKER_IMAGE_NAME = 'calculator-app'
     DOCKER_TAG = "latest"
@@ -18,10 +20,6 @@ pipeline {
     disableConcurrentBuilds()            
   }
 
-  environment {
-    NODE_ENV = 'test'
-    CI = 'true'
-  }
 
   stages {
     stage('Checkout') {
