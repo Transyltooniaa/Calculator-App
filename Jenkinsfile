@@ -50,6 +50,21 @@ pipeline {
         }
       }
     }
+
+    stage('Docker Diagnostics') {
+      steps {
+        sh '''
+          echo "USER=$(id -un)"
+          echo "PATH=$PATH"
+          which docker || true
+          ls -l /opt/homebrew/bin/docker || true
+          ls -l /usr/local/bin/docker || true
+          docker version || echo "docker version failed"
+          docker context ls || true
+        '''
+      }
+    }
+
   
 
     stage('Build Image') {
