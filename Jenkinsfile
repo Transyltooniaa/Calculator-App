@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   tools {
-    nodejs 'NodeJS'   // <- must match the Tool name you added
+    nodejs 'node'   // <- must match the Tool name you added
   }
 
   options { timestamps() }
