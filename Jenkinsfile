@@ -1,52 +1,41 @@
 pipeline {
   agent any
 
-  environment {
-    NODE_ENV = "test"
+  tools {
+    nodejs 'NodeJS'   // <- must match the Tool name you added
   }
 
+  options { timestamps() }
+
+  environment { NODE_ENV = 'test' }
+
   stages {
-    stage('Checkout') {
+    stage('Checkout') { steps { checkout scm } }
+
+    stage('Diagnostics') {
       steps {
-        checkout scm
+        sh 'echo PATH=$PATH'
+        sh 'which node || true'
+        sh 'node -v && npm -v'
       }
     }
 
     stage('Install') {
       steps {
-        sh 'npm ci'
+        sh '''
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+        '''
       }
     }
 
-    stage('Lint') {
-      steps {
-        // Add ESLint if you’ve set it up; otherwise comment this out
-        sh 'npm run lint || true'
-      }
-    }
-
-    stage('Test') {
-      steps {
-        sh 'npm test'
-      }
-      post {
-        always {
-          // Archive coverage folder if available
-          archiveArtifacts artifacts: 'coverage/**', allowEmptyArchive: true
-        }
-      }
-    }
+    stage('Test') { steps { sh 'npm test' } }
   }
 
   post {
-    success {
-      echo "✅ Build ${env.BUILD_NUMBER} passed!"
-    }
-    failure {
-      echo "❌ Build ${env.BUILD_NUMBER} failed."
-    }
-    always {
-      cleanWs()
-    }
+    always { cleanWs() }
   }
 }
