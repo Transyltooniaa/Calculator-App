@@ -66,17 +66,21 @@ pipeline {
     stage('Build Image') {
       steps {
         script {
-          docker.build("${DOCKER_IMAGE}", ".")
+          sh '''
+            /usr/local/bin/docker build -t ${DOCKER_IMAGE} .
+          '''
         }
       }
     }
 
     stage('Push Image') {
       steps {
-        script {
-          docker.withRegistry('https://index.docker.io/v1/', 'docker_creds') {
-            docker.image("${DOCKER_IMAGE}").push()
-          }
+        withCredentials([usernamePassword(credentialsId: 'docker_creds', usernameVariable: 'USR', passwordVariable: 'PSW')]) {
+          sh '''
+            echo "$PSW" | /usr/local/bin/docker login -u "$USR" --password-stdin
+            /usr/local/bin/docker push ${DOCKER_IMAGE}
+            /usr/local/bin/docker logout
+          '''
         }
       }
     }
