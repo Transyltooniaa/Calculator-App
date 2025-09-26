@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+  </head>
+  <body>
+    <main class="container">
+      <div class="calculator-wrapper">
+        <h1 class="calculator-title">🧮 <%= title %></h1>
+        
+        <form id="calc-form" class="calculator-card">
+          <div class="operation-field">
+            <label for="op" class="operation-label">Choose Operation</label>
+            <select id="op" name="op" class="operation-select" required>
+              <option value="sqrt">Square Root (√x)</option>
+              <option value="fact">Factorial (!x)</option>
+              <option value="ln">Natural Logarithm (ln x)</option>
+              <option value="pow">Power (x^b)</option>
+            </select>
+          </div>
+          
+          <div class="inputs-container">
+            <div class="input-field">
+              <label for="a" class="input-label">First Number</label>
+              <input 
+                id="a" 
+                name="a" 
+                type="number" 
+                step="any" 
+                class="number-input" 
+                placeholder="Enter number"
+                required 
+              />
+            </div>
+            
+            <div class="input-field" id="second-input">
+              <label for="b" class="input-label">Second Number</label>
+              <input 
+                id="b" 
+                name="b" 
+                type="number" 
+                step="any" 
+                class="number-input" 
+                placeholder="Enter number"
+                required 
+              />
+            </div>
+          </div>
+          
+          <button type="submit" class="compute-btn">
+            <span class="btn-text">Calculate</span>
+            <span class="btn-icon">⚡</span>
+          </button>
+        </form>
+        
+        <section id="result" class="result-section hidden">
+          <div class="result-header">
+            <h2 class="result-title">Result</h2>
+            <button id="clear-result" class="clear-btn">×</button>
+          </div>
+          <div class="result-content">
+            <div class="calculation-display" id="calculation-display"></div>
+            <div class="result-value" id="result-value"></div>
+          </div>
+        </section>
+      </div>
+    </main>
+    <script src="/js/calculator.js"></script>
+  </body>
+</html>
