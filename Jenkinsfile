@@ -7,8 +7,8 @@ pipeline {
 
   options {
     timestamps()
-    timeout(time: 10, unit: 'MINUTES')   // prevent hangs
-    disableConcurrentBuilds()            // no overlapping builds on same branch
+    timeout(time: 10, unit: 'MINUTES')  
+    disableConcurrentBuilds()            
   }
 
   environment {
@@ -41,7 +41,6 @@ pipeline {
       }
       post {
         always {
-          // Archive coverage reports if Jest generates them
           archiveArtifacts artifacts: 'coverage/**', allowEmptyArchive: true
         }
       }
@@ -56,7 +55,7 @@ pipeline {
       echo "❌ Build ${env.BUILD_NUMBER} failed"
     }
     always {
-      cleanWs()   // clean workspace after every run
+      cleanWs()   
     }
   }
 }
