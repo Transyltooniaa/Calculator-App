@@ -8,6 +8,7 @@ pipeline {
     DOCKER_IMAGE_NAME = 'calculator-app'
     DOCKER_TAG = "latest"
     DOCKER_IMAGE = "${DOCKER_USER}/${DOCKER_IMAGE_NAME}:${DOCKER_TAG}"
+    PATH = "/Applications/Docker.app/Contents/Resources/bin:/usr/local/bin:/opt/homebrew/bin:${env.PATH}"
   }
 
   tools {
@@ -57,15 +58,10 @@ pipeline {
           echo "USER=$(id -un)"
           echo "PATH=$PATH"
           which docker || true
-          ls -l /opt/homebrew/bin/docker || true
-          ls -l /usr/local/bin/docker || true
           docker version || echo "docker version failed"
-          docker context ls || true
         '''
       }
     }
-
-  
 
     stage('Build Image') {
       steps {
