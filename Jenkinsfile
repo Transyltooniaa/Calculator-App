@@ -4,7 +4,7 @@ pipeline {
   environment {
     NODE_ENV = 'test'
     CI = 'true'
-    DOCKER_USER = 'tranyltoonia'
+    DOCKER_USER = 'transyltoonia'
     DOCKER_IMAGE_NAME = 'calculator-app'
     DOCKER_TAG = "latest"
     DOCKER_IMAGE = "${DOCKER_USER}/${DOCKER_IMAGE_NAME}:${DOCKER_TAG}"
