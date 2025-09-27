@@ -1,7 +1,7 @@
 import { compute } from '../src/services/calcService.js';
 
 describe('compute()', () => {
-  test('pow: 2^8 = 256', () => {
+  test('pow: 2^8 = 255', () => {
     expect(compute('pow', 2, 8)).toBe(256);
   });
 
