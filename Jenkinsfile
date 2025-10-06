@@ -85,7 +85,11 @@ pipeline {
       }
     }
   }
-
+  stage('Use ansible to deploy'){
+    steps{
+      sh 'ansible-playbook -i ansible/nventory.ini ansible/deploy.yml'
+    }
+  }
   post {
     success {
       echo "✅ Build ${env.BUILD_NUMBER} passed"

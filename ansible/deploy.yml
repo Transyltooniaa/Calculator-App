@@ -1,0 +1,28 @@
+- name: deploy calculator app
+  hosts: myhosts
+  vars:
+    calc_image_name: "transyltoonia/calculator-app"
+    calc_image_tag: "latest"
+    calc_container: "calculator-app"
+
+  tasks:
+    - name: remove a container if necessary
+      community.docker.docker_container:
+        name: "{{ calc_container }}"
+        state: absent
+
+    - name: Pull latest Docker image from dockerhub
+      community.docker.docker_image:
+        name: "{{ calc_image_name }}"
+        tag: "{{ calc_image_tag }}"
+        source: pull
+
+    - name: create container from image pulled
+      community.docker.docker_container:
+        name: "{{ calc_container }}"
+        image: "{{ calc_image_name }}:{{ calc_image_tag }}"
+        state: started
+        tty: true
+        interactive: true
+        detach: true
+        restart_policy: "no"
