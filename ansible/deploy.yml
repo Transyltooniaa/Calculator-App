@@ -26,3 +26,5 @@
         interactive: true
         detach: true
         restart_policy: "no"
+        ports:
+          - "3000:3000"
