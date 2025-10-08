@@ -43,7 +43,7 @@ pipeline {
 
     stage('Test') {
       steps {
-        sh 'npm test'
+        sh 'npm run test:cov'
       }
       post {
         always {
@@ -91,16 +91,32 @@ pipeline {
       }
     }
   }
- 
+  
   post {
     success {
-      echo "✅ Build ${env.BUILD_NUMBER} passed"
+      echo "Build ${env.BUILD_NUMBER} passed"
+
+      // Publish HTML coverage report if it exists
+      script {
+        if (fileExists('coverage/lcov-report/index.html')) {
+          publishHTML(target: [
+            reportDir: 'coverage/lcov-report',
+            reportFiles: 'index.html',
+            reportName: 'Jest Coverage Report'
+          ])
+        } else {
+          echo "No coverage report found to publish."
+        }
+      }
     }
+
     failure {
-      echo "❌ Build ${env.BUILD_NUMBER} failed"
+      echo "Build ${env.BUILD_NUMBER} failed"
     }
+
     always {
-      cleanWs()   
+      cleanWs()  
     }
   }
+
 }
