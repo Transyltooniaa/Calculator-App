@@ -96,26 +96,57 @@ pipeline {
     success {
       echo "Build ${env.BUILD_NUMBER} passed"
 
-      // Publish HTML coverage report if it exists
-      script {
-        if (fileExists('coverage/lcov-report/index.html')) {
-          publishHTML(target: [
-            reportDir: 'coverage/lcov-report',
-            reportFiles: 'index.html',
-            reportName: 'Jest Coverage Report'
-          ])
-        } else {
-          echo "No coverage report found to publish."
+        // Publish HTML coverage report if it exists
+        script {
+            if (fileExists('coverage/lcov-report/index.html')) {
+                publishHTML(target: [
+                    reportDir: 'coverage/lcov-report',
+                    reportFiles: 'index.html',
+                    reportName: 'Jest Coverage Report'
+                ])
+            } else {
+                echo "No coverage report found to publish."
+            }
         }
-      }
+
+        // Send success email
+        emailext(
+            subject: "Build #${env.BUILD_NUMBER} succeeded - ${env.JOB_NAME}",
+            body: """
+                <p>Hi Team,</p>
+                <p>The Jenkins build <b>#${env.BUILD_NUMBER}</b> for <b>${env.JOB_NAME}</b> was successful!</p>
+                <p><b>Details:</b></p>
+                <ul>
+                  <li>Job: ${env.JOB_NAME}</li>
+                  <li>Build Number: ${env.BUILD_NUMBER}</li>
+                  <li>URL: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></li>
+                </ul>
+                <p>Regards,<br>Jenkins CI</p>
+            """,
+            mimeType: 'text/html',
+            to: 'Ajitesh.Kumar@iiitb.ac.in'
+        )
     }
 
     failure {
-      echo "Build ${env.BUILD_NUMBER} failed"
+        echo "Build ${env.BUILD_NUMBER} failed"
+
+        // Send failure email
+        emailext(
+            subject: "❌ Build #${env.BUILD_NUMBER} failed - ${env.JOB_NAME}",
+            body: """
+                <p>Hi Team,</p>
+                <p>The Jenkins build <b>#${env.BUILD_NUMBER}</b> for <b>${env.JOB_NAME}</b> has failed.</p>
+                <p><b>Check logs:</b> <a href="${env.BUILD_URL}console">${env.BUILD_URL}console</a></p>
+                <p>Regards,<br>Jenkins CI</p>
+            """,
+            mimeType: 'text/html',
+            to: 'your_email@example.com'
+        )
     }
 
     always {
-      cleanWs()  
+        cleanWs()  
     }
   }
 
