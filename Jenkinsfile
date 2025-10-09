@@ -96,7 +96,6 @@ pipeline {
     success {
       echo "Build ${env.BUILD_NUMBER} passed"
 
-        // Publish HTML coverage report if it exists
         script {
             if (fileExists('coverage/lcov-report/index.html')) {
                 publishHTML(target: [
@@ -130,8 +129,6 @@ pipeline {
 
     failure {
         echo "Build ${env.BUILD_NUMBER} failed"
-
-        // Send failure email
         emailext(
             subject: "❌ Build #${env.BUILD_NUMBER} failed - ${env.JOB_NAME}",
             body: """
