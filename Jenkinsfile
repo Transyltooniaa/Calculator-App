@@ -138,7 +138,7 @@ pipeline {
                 <p>Regards,<br>Jenkins CI</p>
             """,
             mimeType: 'text/html',
-            to: 'your_email@example.com'
+            to: 'Ajitesh.Kumar@iiitb.ac.in'
         )
     }
 
