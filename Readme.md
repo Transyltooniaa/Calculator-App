@@ -1,4 +1,4 @@
-# 🧮 Scientific Calculator Web Application
+# 🧮 Scientific Calculator Web Application 
 
 A modern, responsive scientific calculator web application with a sleek UI, containerized deployment, and a complete CI/CD pipeline.
 
