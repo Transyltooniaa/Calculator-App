@@ -9,6 +9,7 @@
     - name: remove a container if necessary
       community.docker.docker_container:
         name: "{{ calc_container }}"
+        # This prevents conflicts when creating a new one with the same name later.
         state: absent
 
     - name: Pull latest Docker image from dockerhub
@@ -26,5 +27,6 @@
         interactive: true
         detach: true
         restart_policy: "no"
+        # the container won’t automatically restart if it stops.
         ports:
           - "3000:3000"
