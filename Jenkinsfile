@@ -1,23 +1,46 @@
 pipeline {
+
+// agent is used to specify where the pipeline or a specific stage will run
   agent any
 
   environment {
+    // standard environment variable in Node.js used to control behavior based on environment type — like development, test, or production.
+    // Since we are using npm run test:cov, setting NODE_ENV to 'test' ensures that any test-specific configurations or behaviors are activated during the testing phase.(Node_env=test disables caching, may use mock databases or in-memory stores.)
+    // If it weren’t set, NODE_ENV would default to undefined, which can lead to inconsistent results between local testing and CI runs.
     NODE_ENV = 'test'
+
+    // Jenkins environment variable to indicate CI environment
     CI = 'true'
+
+    // Docker Hub username
     DOCKER_USER = 'transyltoonia'
+
+    // Docker image name
     DOCKER_IMAGE_NAME = 'calculator-app'
+
+    // Docker image tag
     DOCKER_TAG = "latest"
+
+    // Docker image is in the format: user/image_name:tag
     DOCKER_IMAGE = "${DOCKER_USER}/${DOCKER_IMAGE_NAME}:${DOCKER_TAG}"
+
+    // Path for Docker binary on macOS
     PATH = "/Applications/Docker.app/Contents/Resources/bin:/usr/local/bin:/opt/homebrew/bin:${env.PATH}"
   }
 
   tools {
+    // Node.js version configured in Jenkins global tools. Necessary for npm commands in the jenkins pipeline.
     nodejs 'node'
   }
 
   options {
+    // Add timestamps to the console output for better logging
     timestamps()
+
+      // Set a timeout for the entire pipeline to prevent hanging builds
     timeout(time: 10, unit: 'MINUTES')  
+
+    // Prevent concurrent builds of the same job to avoid conflicts (e.g., pushing to Docker Hub simultaneously)
     disableConcurrentBuilds()            
   }
 
@@ -25,6 +48,7 @@ pipeline {
   stages {
     stage('Checkout') {
       steps {
+        // Checkout the code from the repository using the provided SCM configuration
         checkout scm
       }
     }
@@ -49,17 +73,6 @@ pipeline {
         always {
           archiveArtifacts artifacts: 'coverage/**', allowEmptyArchive: true
         }
-      }
-    }
-
-    stage('Docker Diagnostics') {
-      steps {
-        sh '''
-          echo "USER=$(id -un)"
-          echo "PATH=$PATH"
-          which docker || true
-          docker version || echo "docker version failed"
-        '''
       }
     }
 
