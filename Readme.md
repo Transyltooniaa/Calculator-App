@@ -293,7 +293,7 @@ ansible-playbook -i ansible/inventory.ini ansible/deploy.yml
 
 <img width="1920" height="1080" alt="Screenshot 2025-10-08 at 23 10 30" src="https://github.com/user-attachments/assets/29210c57-eb5d-41ea-8cfe-d1ea5275dc34" />
 <img width="1920" height="1080" alt="Screenshot 2025-10-08 at 23 10 20" src="https://github.com/user-attachments/assets/4219db15-046f-4ecb-9c42-d2aff3c74fb0" />
-<img width="1920" height="1080" alt="Screenshot 2025-10-08 at 23 09 47" src="https://github.com/user-attachments/assets/3a26985c-4dc0-4222-a788-28f31e4cad5f" />
+<img width="1920" height="1080" alt="Screenshot 2025-10-08 at 23 09 47" src="https://github.com/user-attachments/assets/3a26985c-4dc0-4222-a788-28f31e4cad5f"/>
 
 ## 🚧 Future Improvements
 
