@@ -283,7 +283,7 @@ The application is deployed using Ansible, which automates the deployment proces
 
 ### Manual Deployment
 
-To deploy manually using Ansible :
+To deploy manually using Ansible:
 
 ```bash
 ansible-playbook -i ansible/inventory.ini ansible/deploy.yml
