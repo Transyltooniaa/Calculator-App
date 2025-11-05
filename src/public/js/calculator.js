@@ -10,6 +10,7 @@ class Calculator {
     this.calculationDisplay = document.getElementById('calculation-display');
     this.resultValue = document.getElementById('result-value');
     this.clearBtn = document.getElementById('clear-result');
+    this.clearFormBtn = document.getElementById('clear-form');
     
     this.init();
   }
@@ -18,6 +19,7 @@ class Calculator {
     this.form.addEventListener('submit', this.handleSubmit.bind(this));
     this.opSelect.addEventListener('change', this.handleOperationChange.bind(this));
     this.clearBtn.addEventListener('click', this.clearResult.bind(this));
+  if (this.clearFormBtn) this.clearFormBtn.addEventListener('click', this.clearForm.bind(this));
     
     this.handleOperationChange();
     
@@ -40,6 +42,14 @@ class Calculator {
       this.updateInputLabels(operation);
     }
     
+    // Clear any stale validation messages when operation changes
+    try {
+      this.inputA.setCustomValidity('');
+      this.inputB.setCustomValidity('');
+    } catch (e) {
+      // ignore if elements not present
+    }
+
     this.clearResult();
   }
   
@@ -125,6 +135,10 @@ class Calculator {
     const b = this.inputB.value ? parseFloat(this.inputB.value) : null;
     
     // Client-side validation
+    // clear any stale validity messages (defensive)
+    this.inputA.setCustomValidity('');
+    this.inputB.setCustomValidity('');
+
     if (!this.isValidInput(operation, a, b)) {
       return;
     }
@@ -160,58 +174,92 @@ class Calculator {
       this.showLoading(false);
     }
   }
+
+  // Clear the whole form (inputs + result + validation)
+  clearForm() {
+    // Reset HTML form fields
+    try {
+      this.form.reset();
+    } catch (e) {
+      // ignore
+    }
+
+    // Clear validation messages
+    try {
+      this.inputA.setCustomValidity('');
+      this.inputB.setCustomValidity('');
+    } catch (e) {}
+
+    // Hide result and reset UI to the current operation state
+    this.clearResult();
+    this.handleOperationChange();
+  }
   
   isValidInput(operation, a, b) {
+    // clear previous custom validity messages
+    try {
+      this.inputA.setCustomValidity('');
+      this.inputB.setCustomValidity('');
+    } catch (e) {}
+
     // Check for NaN
     if (isNaN(a)) {
-      this.showError('Please enter a valid number');
+      try { this.inputA.setCustomValidity('Please enter a valid number'); this.inputA.reportValidity(); } catch (e) {}
+      this.clearResult();
       return false;
     }
-    
+
     if (b !== null && isNaN(b)) {
-      this.showError('Please enter a valid second number');
+      try { this.inputB.setCustomValidity('Please enter a valid second number'); this.inputB.reportValidity(); } catch (e) {}
+      this.clearResult();
       return false;
     }
-    
-    // Specific validations for our 4 operations
+
+    // Specific validations for our 4 operations - use native validation bubbles
     switch (operation) {
       case 'fact':
         if (a < 0 || !Number.isInteger(a)) {
-          this.showError('Factorial requires a non-negative integer');
+          try { this.inputA.setCustomValidity('Factorial requires a non-negative integer'); this.inputA.reportValidity(); } catch (e) {}
+          this.clearResult();
           return false;
         }
         if (a > 170) {
-          this.showError('Factorial result would be too large (max: 170!)');
+          try { this.inputA.setCustomValidity('Factorial result would be too large (max: 170!)'); this.inputA.reportValidity(); } catch (e) {}
+          this.clearResult();
           return false;
         }
         break;
-        
+
       case 'sqrt':
         if (a < 0) {
-          this.showError('Square root requires a non-negative number');
+          try { this.inputA.setCustomValidity('Square root requires a non-negative number'); this.inputA.reportValidity(); } catch (e) {}
+          this.clearResult();
           return false;
         }
         break;
-        
+
       case 'ln':
         if (a <= 0) {
-          this.showError('Natural logarithm requires a positive number');
+          try { this.inputA.setCustomValidity('Natural logarithm requires a positive number'); this.inputA.reportValidity(); } catch (e) {}
+          this.clearResult();
           return false;
         }
         break;
-        
+
       case 'pow':
         if (a === 0 && b < 0) {
-          this.showError('Cannot raise zero to a negative power');
+          try { this.inputB.setCustomValidity('Cannot raise zero to a negative power'); this.inputB.reportValidity(); } catch (e) {}
+          this.clearResult();
           return false;
         }
         if (a < 0 && !Number.isInteger(b)) {
-          this.showError('Cannot raise negative number to non-integer power');
+          try { this.inputB.setCustomValidity('Cannot raise negative number to non-integer power'); this.inputB.reportValidity(); } catch (e) {}
+          this.clearResult();
           return false;
         }
         break;
     }
-    
+
     return true;
   }
   
